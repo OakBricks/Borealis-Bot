@@ -1,2 +1,4 @@
 # CatalystBot
-bot for Catalyst Productions discord server
+###### bot for Catalyst Productions discord server
+
+
