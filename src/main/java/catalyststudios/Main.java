@@ -10,6 +10,7 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions;
+import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import org.jetbrains.annotations.NotNull;
@@ -20,10 +21,7 @@ import javax.security.auth.login.LoginException;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeFormatterBuilder;
-import java.time.format.FormatStyle;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -32,30 +30,32 @@ import java.util.Random;
 // ODYxMzg3ODk0MDUyMzU2MTM2.Ga74mp.FM76uGZyTxaMkDEzTeV-VfWJcyYAsrrAV7wtlM
 public class Main extends ListenerAdapter {
     private static Logger LOGGER = LoggerFactory.getLogger(Main.class);
+    private static OptionMapping nukeChannelOption;
 
     public static void main(String[] args) throws LoginException, IOException {
         HttpServer httpServer = HttpServer.create(new InetSocketAddress(65479), 0);
         httpServer.start();
-//        args = new String[]{"ODYxMzg3ODk0MDUyMzU2MTM2.Ga74mp.FM76uGZyTxaMkDEzTeV-VfWJcyYAsrrAV7wtlM"};
-        String token = "OTkzNzM5MDMyNDY0OTg2MTIy.GpkHnm.CsFUslIdcw_ss19Mf8Xnx4anPf_hlT28oCP5iw";
+        String token = "ODYxMzg3ODk0MDUyMzU2MTM2.Ga74mp.FM76uGZyTxaMkDEzTeV-VfWJcyYAsrrAV7wtlM";
+//        String token = "OTkzNzM5MDMyNDY0OTg2MTIy.GpkHnm.CsFUslIdcw_ss19Mf8Xnx4anPf_hlT28oCP5iw";
 
         JDA jda = JDABuilder.createDefault(token)
                 .addEventListeners(new Main())
                 .setActivity(Activity.watching("your house"))
                 .build();
 
-        jda.upsertCommand("opt", "Gives a user a role if allowed by admins").addOption(OptionType.ROLE, "role", "An approved role that can be given to you", true).queue();
-        jda.upsertCommand("verify", "If verified you can start chatting and interacting with the server").queue();
+        jda.upsertCommand("opt", "Gives a user a role if allowed by admins").addOption(OptionType.ROLE, "role", "An approved role that can be given to you", true).setGuildOnly(true).queue();
+        jda.upsertCommand("verify", "If verified you can start chatting and interacting with the server").setGuildOnly(true).queue();
 
         ArrayList<Permission> clearPermissions = new ArrayList<Permission>();
         clearPermissions.add(Permission.MESSAGE_MANAGE);
+        clearPermissions.add(Permission.MANAGE_CHANNEL);
 
         jda.upsertCommand("clear", "Clears a channel of its messages").setDefaultPermissions(DefaultMemberPermissions.enabledFor(clearPermissions)).addOption(OptionType.CHANNEL, "channel", "Channel to clean out", true).queue();
     }
 
     @Override
     public void onReady(@NotNull ReadyEvent event) {
-        LOGGER.debug("Bot started at " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("h:m:s a, d MMM uuuu ")));
+        LOGGER.debug("Bot started at " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("h:m:s a, d MMM uuuu")));
     }
 
     @Override
@@ -75,21 +75,21 @@ public class Main extends ListenerAdapter {
                 // Reply if the user already has a role
                 event.reply("You already have this role!").setEphemeral(true).queue();
             } else if (!member.hasPermission(Permission.MESSAGE_SEND)) {
-                LOGGER.error("{} tried to get a role without the required permissions", member.getUser().getAsMention());
-                event.reply("Unable to give role: Insufficient permissions").queue();
+                LOGGER.warn("{} tried to get a role without the required permissions", member.getUser().getAsTag());
+                event.reply("Unable to give role: Insufficient permissions").setEphemeral(true).queue();
             }else if (role == guild.getPublicRole()) {
-                LOGGER.info("{} tried to give themselves @everyone!", member.getUser().getAsMention());
+                LOGGER.info("{} tried to give themselves @everyone!", member.getUser().getAsTag());
                 event.reply("Unable to give role: Role is @everyone").setEphemeral(true).queue();
             } else if (role.getPosition() >= botHighestRole.getPosition() || role.getPosition() >= guild.getRoleByBot(bot.getId()).getPosition()) {
-                // Oops, an error occurred
-                LOGGER.info(member.getUser().getName() + " tried to get an unauthorized role!");
+                LOGGER.warn("{} tried to get an unauthorized role!", member.getUser().getAsTag());
                 event.reply("Unable to give role: Role is bot's role or above").setEphemeral(true).queue();
             } else if (!event.getMember().getRoles().contains(role)) {
                 // Reply if the command ran successfully without error and the user got their role
+                LOGGER.info("{} got the role {} successfully!", member.getUser().getAsTag(), role.getName());
                 event.reply("Role applied successfully").setEphemeral(true).queue();
                 guild.addRoleToMember(member, role).queue();
             } else {
-                LOGGER.error("An unknown error occurred!");
+                LOGGER.error("An unknown error occurred with the request for {}!", member.getUser().getAsTag());
                 event.reply("An unknown error occurred!").setEphemeral(true).queue();
             }
         }
@@ -104,8 +104,10 @@ public class Main extends ListenerAdapter {
         }
 
         if (event.getName().equals("clear")) {
-            event.reply("Are you sure you want to clear this channel?")
-                    .addActionRow(Button.primary("noButtonClear", "No"), Button.danger("yesButtonClear", "Yes")).setEphemeral(true).queue();
+            TextChannel textChannel = event.getOption("channel").getAsTextChannel();
+
+            textChannel.createCopy().queue();
+            textChannel.delete().queue();
         }
     }
 
@@ -113,7 +115,7 @@ public class Main extends ListenerAdapter {
     public void onButtonInteraction(@NotNull ButtonInteractionEvent event) {
         Member member = event.getMember();
         Guild guild = event.getGuild();
-        MessageChannel channel = event.getChannel();
+        TextChannel channel = event.getTextChannel();
 
         if (event.getComponentId().equals("button")) {
             event.reply("Totally verified").setEphemeral(true).queue();
