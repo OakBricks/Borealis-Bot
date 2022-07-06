@@ -30,36 +30,64 @@ public class Main extends ListenerAdapter {
     private static final Logger LOGGER = LoggerFactory.getLogger(Main.class);
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     private static final List<String> templateList = List.of("");
+    private static ConfigFile config;
 
     public static void main(String[] args) throws LoginException, IOException {
         if (!ConfigHelper.configFile.exists()) {
             LOGGER.error("Config file not found, creating template!");
             if (ConfigHelper.configFile.createNewFile()) {
-                GSON.toJson(new ConfigFile("", false, templateList, ""));
+                GSON.toJson(new ConfigFile("BOT_TOKEN", false, templateList, "0"));
                 LOGGER.info("Template configuration file created, please edit the values in the configuration file as per the documentation");
             }
         }
 
-        ConfigFile config = GSON.fromJson(new FileReader(ConfigHelper.configFile), ConfigFile.class);
+        config = GSON.fromJson(new FileReader(ConfigHelper.configFile), ConfigFile.class);
 
         JDA jda = JDABuilder.createDefault(config.getToken())
                 .addEventListeners(new Main())
                 .setActivity(Activity.watching("your house"))
                 .build();
 
-        jda.upsertCommand("opt", "Gives a user a role if allowed by admins").addOption(OptionType.ROLE, "role", "An approved role that can be given to you", true).setGuildOnly(true).queue();
-        jda.upsertCommand("verify", "If verified you can start chatting and interacting with the server").setGuildOnly(true).queue();
+        jda.upsertCommand("giverole", "Gives a user a role if allowed by admins")
+                .addOption(
+                        OptionType.ROLE,
+                        "role",
+                        "An approved role that can be given to you",
+                        true
+                )
+                .setGuildOnly(true).queue();
+        jda.upsertCommand("verify", "If verified you can start chatting and interacting with the server")
+                .setGuildOnly(true)
+                .queue();
+        jda.upsertCommand("ban", "Bans a user")
+                .addOption(
+                        OptionType.STRING,
+                        "time",
+                        "Amount of time to ban somebody, defaults to days (append h, d, w, m, or y for more choice on the amount of time for a ban)",
+                        false
+                )
+                .setGuildOnly(true)
+                .setDefaultPermissions(DefaultMemberPermissions.enabledFor(List.of(Permission.BAN_MEMBERS)))
+                .queue();
 
-        ArrayList<Permission> clearPermissions = new ArrayList<Permission>();
+        ArrayList<Permission> clearPermissions = new ArrayList<>();
         clearPermissions.add(Permission.MESSAGE_MANAGE);
         clearPermissions.add(Permission.MANAGE_CHANNEL);
 
-        jda.upsertCommand("clear", "Clears a channel of its messages").setDefaultPermissions(DefaultMemberPermissions.enabledFor(clearPermissions)).addOption(OptionType.CHANNEL, "channel", "Channel to clean out", true).queue();
+        jda.upsertCommand("clear", "Clears a channel of its messages")
+                .setDefaultPermissions(DefaultMemberPermissions.enabledFor(clearPermissions))
+                .addOption(
+                        OptionType.CHANNEL,
+                        "channel",
+                        "Channel to clean out",
+                        true
+                )
+                .queue();
     }
 
     @Override
     public void onReady(@NotNull ReadyEvent event) {
-        LOGGER.debug("Bot started at " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("h:m:s a, d MMM uuuu")));
+        LOGGER.info("Bot started at " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("h:m:s a, d MMM uuuu")));
     }
 
     @Override
@@ -99,7 +127,9 @@ public class Main extends ListenerAdapter {
         }
 
         if (event.getName().equals("verify")) {
-            if (member.getRoles().contains(guild.getRoleById("992867609252999299"))) {
+            if (config.getVerifyRole().isEmpty()) {
+                event.reply("This command has been disabled by server administrators").setEphemeral(true).queue();
+            } else if (member.getRoles().contains(event.getGuild().getRoleById(config.getVerifyRole()))) {
                 event.reply("You are already verified!").setEphemeral(true).queue();
             } else {
                 event.reply("Press the **rojo** button to verify that you are a human.")

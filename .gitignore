@@ -1,6 +1,11 @@
-config.json
 .idea/*
 build/*
 logs/*
 out/*
 .*
+
+# random files only i have
+a.txt
+
+# configuration files
+config.json
