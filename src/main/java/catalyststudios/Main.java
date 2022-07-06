@@ -1,6 +1,7 @@
 package catalyststudios;
 
-import com.sun.net.httpserver.HttpServer;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.Permission;
@@ -10,7 +11,6 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions;
-import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import org.jetbrains.annotations.NotNull;
@@ -19,21 +19,27 @@ import org.slf4j.LoggerFactory;
 
 import javax.security.auth.login.LoginException;
 import java.io.IOException;
-import java.net.InetSocketAddress;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 // token is
 // ODYxMzg3ODk0MDUyMzU2MTM2.Ga74mp.FM76uGZyTxaMkDEzTeV-VfWJcyYAsrrAV7wtlM
 public class Main extends ListenerAdapter {
-    private static Logger LOGGER = LoggerFactory.getLogger(Main.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(Main.class);
+    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
+    private static final List<String> templateList = List.of("");
 
     public static void main(String[] args) throws LoginException, IOException {
-        HttpServer httpServer = HttpServer.create(new InetSocketAddress(65479), 0);
-        httpServer.start();
+        if (!ConfigFileHelper.configFile.exists()) {
+            LOGGER.error("Config file not found, creating template!");
+            if (ConfigFileHelper.configFile.createNewFile()) {
+                GSON.toJson(new ConfigFile("", false, templateList, ""));
+                LOGGER.info("Template configuration file created, please edit the values in the configuration file as per the documentation");
+            }
+        }
+
+        // Initialize variables for just this method
         String token = "ODYxMzg3ODk0MDUyMzU2MTM2.Ga74mp.FM76uGZyTxaMkDEzTeV-VfWJcyYAsrrAV7wtlM";
 //        String token = "OTkzNzM5MDMyNDY0OTg2MTIy.GpkHnm.CsFUslIdcw_ss19Mf8Xnx4anPf_hlT28oCP5iw";
 
@@ -128,7 +134,7 @@ public class Main extends ListenerAdapter {
     // Stolen from https://github.com/OakBricks/Emerald lol
     public String generateButtonID() {
         Random random = new Random();
-        String allowedCharacters = "abcdefghijklmnopqrstuvwxyz1234567890";
+        String allowedCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
         StringBuilder idStringBuilder = new StringBuilder();
 
         for (int i = 0; i < 8; i++) {

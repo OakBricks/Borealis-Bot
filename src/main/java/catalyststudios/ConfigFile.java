@@ -1,33 +1,57 @@
 package catalyststudios;
 
+import java.util.Collection;
+import java.util.Collections;
+
 public class ConfigFile {
-    public ConfigFile(String token, long[] allowedOptRoles, long verifyRole) {
+    public ConfigFile(String token, boolean optBlacklistMode, Collection<String> optRoles, String verifyRole) {
         this.token = token;
-        this.allowedOptRoles = allowedOptRoles;
+        this.optBlacklistMode = optBlacklistMode;
+        this.optRoles = optRoles;
         this.verifyRole = verifyRole;
     }
 
+    public ConfigFile(String token, boolean optBlacklistMode, Collection<String> optRoles) {
+        this.token = token;
+        this.optBlacklistMode = optBlacklistMode;
+        this.optRoles = optRoles;
+    }
+
+    public ConfigFile(String token, String verifyRole) {
+        this.token = token;
+        this.optBlacklistMode= false;
+        this.optRoles = Collections.emptyList();
+        this.verifyRole = verifyRole;
+    }
+
+    public ConfigFile(String token) {
+        this.token = token;
+        this.optRoles = Collections.emptyList();
+        this.verifyRole = "";
+    }
+
     String token;
-    long[] allowedOptRoles;
-    long verifyRole;
+    boolean optBlacklistMode;
+    Collection<String> optRoles;
+    String verifyRole;
 
     public String getToken() {
         return token;
     }
 
-    public long[] getAllowedOptRoles() {
-        return allowedOptRoles;
+    public Collection<String> getOptRoles() {
+        return optRoles;
     }
 
-    public void setAllowedOptRoles(long[] allowedOptRoles) {
-        this.allowedOptRoles = allowedOptRoles;
+    public void setOptRoles(Collection<String> optRoles) {
+        this.optRoles = optRoles;
     }
 
-    public long getVerifyRole() {
+    public String getVerifyRole() {
         return verifyRole;
     }
 
-    public void setVerifyRole(long verifyRole) {
+    public void setVerifyRole(String verifyRole) {
         this.verifyRole = verifyRole;
     }
 }
