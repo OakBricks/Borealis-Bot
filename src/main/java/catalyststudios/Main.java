@@ -30,7 +30,6 @@ import java.util.Random;
 // ODYxMzg3ODk0MDUyMzU2MTM2.Ga74mp.FM76uGZyTxaMkDEzTeV-VfWJcyYAsrrAV7wtlM
 public class Main extends ListenerAdapter {
     private static Logger LOGGER = LoggerFactory.getLogger(Main.class);
-    private static OptionMapping nukeChannelOption;
 
     public static void main(String[] args) throws LoginException, IOException {
         HttpServer httpServer = HttpServer.create(new InetSocketAddress(65479), 0);
