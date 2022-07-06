@@ -18,6 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.security.auth.login.LoginException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -31,19 +32,17 @@ public class Main extends ListenerAdapter {
     private static final List<String> templateList = List.of("");
 
     public static void main(String[] args) throws LoginException, IOException {
-        if (!ConfigFileHelper.configFile.exists()) {
+        if (!ConfigHelper.configFile.exists()) {
             LOGGER.error("Config file not found, creating template!");
-            if (ConfigFileHelper.configFile.createNewFile()) {
+            if (ConfigHelper.configFile.createNewFile()) {
                 GSON.toJson(new ConfigFile("", false, templateList, ""));
                 LOGGER.info("Template configuration file created, please edit the values in the configuration file as per the documentation");
             }
         }
 
-        // Initialize variables for just this method
-        String token = "ODYxMzg3ODk0MDUyMzU2MTM2.Ga74mp.FM76uGZyTxaMkDEzTeV-VfWJcyYAsrrAV7wtlM";
-//        String token = "OTkzNzM5MDMyNDY0OTg2MTIy.GpkHnm.CsFUslIdcw_ss19Mf8Xnx4anPf_hlT28oCP5iw";
+        ConfigFile config = GSON.fromJson(new FileReader(ConfigHelper.configFile), ConfigFile.class);
 
-        JDA jda = JDABuilder.createDefault(token)
+        JDA jda = JDABuilder.createDefault(config.getToken())
                 .addEventListeners(new Main())
                 .setActivity(Activity.watching("your house"))
                 .build();

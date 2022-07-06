@@ -30,10 +30,10 @@ public class ConfigFile {
         this.verifyRole = "";
     }
 
-    String token;
-    boolean optBlacklistMode;
-    Collection<String> optRoles;
-    String verifyRole;
+    private String token;
+    private boolean optBlacklistMode;
+    private Collection<String> optRoles;
+    private String verifyRole;
 
     public String getToken() {
         return token;
