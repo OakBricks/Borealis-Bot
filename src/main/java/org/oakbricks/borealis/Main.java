@@ -1,4 +1,4 @@
-package catalyststudios;
+package org.oakbricks.borealis;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -14,6 +14,8 @@ import net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import org.jetbrains.annotations.NotNull;
+import org.oakbricks.borealis.config.ConfigFile;
+import org.oakbricks.borealis.config.ConfigHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

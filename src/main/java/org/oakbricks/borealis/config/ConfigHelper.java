@@ -1,4 +1,4 @@
-package catalyststudios;
+package org.oakbricks.borealis.config;
 
 import com.google.gson.Gson;
 import org.apache.commons.io.FileUtils;

@@ -1,4 +1,4 @@
-package catalyststudios;
+package org.oakbricks.borealis.config;
 
 import java.util.Collection;
 import java.util.Collections;
