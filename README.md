@@ -1,7 +1,13 @@
 # Borealis Bot
 
 # Usage
-You currently need to host the bot yourself, this might change in the future, however.
+By default, you have to host the bot yourself, however, this can be changed with a custom plugin that utilizes ASM and/or Mixin.
 
 # Installation
-TODO
+###### Recommendations
+- Make sure you have any distro of JDK 17 or later installed (OpenJDK/Hotspot is recommended)
+- Make sure you have a stable internet connection
+- Make sure you have access to a command-line shell
+
+###### Building
+`git clone https://www.github.com/OakBricks/Borealis-Bot`
