@@ -14,12 +14,23 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 import java.util.Iterator;
 
 public class PluginLoader {
     public PluginLoader() {}
     private ClassLoader pluginLoader = ClassLoader.getSystemClassLoader();
+    private static HashMap<PluginsJsonFormat, String> pluginJsonToIdMap = new HashMap<>();
 
+
+    public static PluginsJsonFormat getPlugin(String pluginName) {
+        for (String s : pluginJsonToIdMap.values()) {
+            if (s.equals(pluginName)) {
+
+            }
+        }
+        return new PluginsJsonFormat("", "", "")
+    }
 
     public void loadPlugins(File pluginDir) throws NoSuchMethodException, IOException, InvocationTargetException, IllegalAccessException, URISyntaxException {
         String loaderJson = FileUtils.readFileToString(new File(getClass().getClassLoader().getResource("plugin.json").toURI()), StandardCharsets.UTF_8);
@@ -44,11 +55,10 @@ public class PluginLoader {
             for (Iterator<URL> it = pluginLoader.getResources("plugin.json").asIterator(); it.hasNext(); ) {
                 URL pluginDefURL = it.next();
                 File f = new File(pluginDefURL.getFile());
-                FileReader e = new FileReader(f);
-                char[] fileReaderCharBuffer = new char[]{};
-                e.read(fileReaderCharBuffer);
+                FileReader r = new FileReader(f);
+                PluginsJsonFormat plugin = GSON.fromJson(r, PluginsJsonFormat.class);
 
-                Logger.info(e);
+                pluginJsonToIdMap.put(plugin, plugin.pluginId);
             }
         }
     }
