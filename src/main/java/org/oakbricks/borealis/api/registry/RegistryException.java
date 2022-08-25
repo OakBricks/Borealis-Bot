@@ -1,4 +1,4 @@
-package org.oakbricks.borealis.registry;
+package org.oakbricks.borealis.api.registry;
 
 public class RegistryException extends Exception {
     public RegistryException() {

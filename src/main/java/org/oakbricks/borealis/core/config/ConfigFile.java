@@ -1,4 +1,4 @@
-package org.oakbricks.borealis.config;
+package org.oakbricks.borealis.core.config;
 
 import java.util.Collection;
 import java.util.Collections;

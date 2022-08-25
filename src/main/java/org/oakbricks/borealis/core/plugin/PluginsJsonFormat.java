@@ -1,4 +1,4 @@
-package org.oakbricks.borealis.plugin;
+package org.oakbricks.borealis.core.plugin;
 
 public class PluginsJsonFormat {
     int schemaVersion;

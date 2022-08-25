@@ -1,4 +1,4 @@
-package org.oakbricks.borealis.plugin;
+package org.oakbricks.borealis.core.plugin;
 
 /**
  * Copyright 2019 Patrick Ahlbrecht

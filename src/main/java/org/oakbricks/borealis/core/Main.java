@@ -1,4 +1,4 @@
-package org.oakbricks.borealis;
+package org.oakbricks.borealis.core;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -14,8 +14,8 @@ import net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import org.jetbrains.annotations.NotNull;
-import org.oakbricks.borealis.config.ConfigFile;
-import org.oakbricks.borealis.config.ConfigHelper;
+import org.oakbricks.borealis.core.config.ConfigFile;
+import org.oakbricks.borealis.core.config.ConfigHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,7 +29,7 @@ import java.util.*;
 // token is
 // ODYxMzg3ODk0MDUyMzU2MTM2.Ga74mp.FM76uGZyTxaMkDEzTeV-VfWJcyYAsrrAV7wtlM
 public class Main extends ListenerAdapter {
-    private static final Logger LOGGER = LoggerFactory.getLogger(Main.class);
+    protected static final Logger LOGGER = LoggerFactory.getLogger(Main.class);
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     private static final List<String> templateList = List.of("");
     private static ConfigFile config;

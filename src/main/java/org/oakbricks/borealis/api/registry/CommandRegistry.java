@@ -1,13 +1,16 @@
-package org.oakbricks.borealis.registry;
+package org.oakbricks.borealis.api.registry;
 
-import org.oakbricks.borealis.commands.Command;
-import org.oakbricks.borealis.commands.CommandEntry;
+import org.oakbricks.borealis.api.commands.Command;
+import org.oakbricks.borealis.api.commands.CommandEntry;
+import org.oakbricks.borealis.api.events.Event;
+import org.oakbricks.borealis.api.events.EventSender;
+import org.oakbricks.borealis.api.events.RegistryEvent;
 import org.tinylog.Logger;
 
-import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 
-public class CommandRegistry implements IRegistry<Command> {
+public class CommandRegistry implements IRegistry<Command>, EventSender<RegistryEvent> {
     private HashMap<String, Command> registeredCommands = new HashMap<>();
 
     @Override
@@ -33,11 +36,21 @@ public class CommandRegistry implements IRegistry<Command> {
     }
 
     @Override
-    public Command getFromRegistry(Command name) {
+    public List<Command> getFromRegistry(Command name) {
         return null;
     }
 
     public HashMap<String, Command> getRegisteredCommands() {
         return registeredCommands;
+    }
+
+    @Override
+    public RegistryEvent getEvent() {
+        return null;
+    }
+
+    @Override
+    public void sendEvent() {
+
     }
 }

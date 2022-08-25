@@ -1,4 +1,4 @@
-package org.oakbricks.borealis.config;
+package org.oakbricks.borealis.core.config;
 
 import com.google.gson.Gson;
 import org.apache.commons.io.FileUtils;

@@ -1,4 +1,4 @@
-package org.oakbricks.borealis.commands;
+package org.oakbricks.borealis.api.commands;
 
 public abstract class Command {
     private String name;
