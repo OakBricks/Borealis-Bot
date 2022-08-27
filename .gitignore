@@ -9,3 +9,6 @@ a.txt
 
 # configuration files
 config.json
+
+# testing plugins
+./plugins/*

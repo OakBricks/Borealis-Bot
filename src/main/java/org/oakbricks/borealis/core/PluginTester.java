@@ -1,6 +1,6 @@
 package org.oakbricks.borealis.core;
 
-import org.oakbricks.borealis.core.plugin.PluginLoader;
+import org.oakbricks.borealis.core.plugin.json.PluginLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,6 +14,7 @@ public class PluginTester {
     private static final Logger LOGGER = LoggerFactory.getLogger("Plugin Tester");
 
     public static void main(String[] args) throws IOException, InvocationTargetException, NoSuchMethodException, IllegalAccessException, URISyntaxException {
+        System.setProperty("illegal-access", "permit");
         LOGGER.info("Running miscellaneous tests first!");
         LOGGER.debug("Event ID Testing: {}", generateEventId(generateRandomEventName()));
         LOGGER.info("\nTesting out plugin loader!\nplease dont mind the log spam!");

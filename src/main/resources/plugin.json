@@ -1,6 +1,13 @@
 {
   "schemaVersion": 1,
   "pluginName": "BorealisBot",
-  "pluginId": "bb-base",
-  "version": "0.3.0-ALPHA"
+  "pluginId": "borealisbot",
+  "version": "0.3.0-ALPHA",
+  "mainClass": "org.oakbricks.borealis.core.Main",
+  "authors": [
+    "OakBricks"
+  ],
+  "dependencies": [
+    "java:17"
+  ]
 }
