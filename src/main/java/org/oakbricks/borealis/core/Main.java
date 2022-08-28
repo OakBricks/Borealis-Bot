@@ -22,7 +22,7 @@ import org.oakbricks.borealis.core.commands.AboutCommand;
 import org.oakbricks.borealis.core.config.ConfigFile;
 import org.oakbricks.borealis.core.config.ConfigHelper;
 import org.oakbricks.borealis.core.plugin.ContextProvider;
-import org.oakbricks.borealis.core.plugin.json.PluginLoader;
+import org.oakbricks.borealis.core.plugin.PluginLoader;
 import org.oakbricks.borealis.core.plugin.json.PluginsJsonFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -65,6 +65,10 @@ public class Main extends ListenerAdapter implements ContextProvider {
                 .addEventListeners(new Main())
                 .setActivity(Activity.watching("your house"))
                 .build();
+
+        for (PluginsJsonFormat plugin : loader.getPlugins()) {
+
+        }
 
         RegistryHelper.register(new AboutCommand(loaderPlugin.getVersion()), commandRegistry, "");
 

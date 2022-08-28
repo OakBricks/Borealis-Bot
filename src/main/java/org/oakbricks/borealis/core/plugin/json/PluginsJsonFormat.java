@@ -11,6 +11,16 @@ public class PluginsJsonFormat {
         this.dependencies = dependencies;
     }
 
+    public PluginsJsonFormat() {
+        this.schemaVersion = -1;
+        this.pluginName = null;
+        this.pluginId = null;
+        this.version = null;
+        this.mainClass = null;
+        this.authors = null;
+        this.dependencies = null;
+    }
+
     int schemaVersion;
     String pluginName;
     String pluginId;
