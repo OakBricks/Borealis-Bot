@@ -1,6 +1,5 @@
 package org.oakbricks.borealis.core.commands;
 
-import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.oakbricks.borealis.api.commands.Command;
 import org.oakbricks.borealis.api.commands.CommandEntry;

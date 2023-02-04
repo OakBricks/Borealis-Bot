@@ -4,8 +4,8 @@
 By default, you have to host the bot yourself, however, this can be changed with a custom plugin that utilizes ASM and/or Mixin to change how the bot and its plugins work.
 
 # Installation
-##### Recommendations
-- Make sure you have any distro of JDK 17 or later installed (OpenJDK/Hotspot is recommended)
+##### Requirements
+- Make sure you have any distro of JDK 17 or later installed (Adoptium/Hotspot is recommended)
 - Make sure you have a stable internet connection
 - Make sure you have access to a command-line shell
 

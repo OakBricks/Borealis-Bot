@@ -30,7 +30,7 @@ public class CommandRegistry implements IRegistry<Command>, EventSender<Registry
         String cmdName = cmdEntry.name();
         String cmdDesc = cmdEntry.description();
 
-        if (!cmdName.isBlank() || cmdDesc.isBlank()) {
+        if (cmdName.isBlank() || cmdDesc.isBlank()) {
             throw new RegistryException("Cannot find the name and/or description for this command");
         }
         registeredCommands.put(cmdName, toRegister);

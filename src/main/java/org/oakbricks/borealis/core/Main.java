@@ -21,43 +21,45 @@ import org.oakbricks.borealis.api.registry.RegistryHelper;
 import org.oakbricks.borealis.core.commands.AboutCommand;
 import org.oakbricks.borealis.core.config.ConfigFile;
 import org.oakbricks.borealis.core.config.ConfigHelper;
-import org.oakbricks.borealis.core.plugin.ContextProvider;
 import org.oakbricks.borealis.core.plugin.PluginLoader;
 import org.oakbricks.borealis.core.plugin.json.PluginsJsonFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.security.auth.login.LoginException;
-import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
-public class Main extends ListenerAdapter implements ContextProvider {
+public class Main extends ListenerAdapter {
     protected static final Logger LOGGER = LoggerFactory.getLogger(Main.class);
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     private static final List<String> templateList = List.of("");
     private static ConfigFile config;
     private static PluginsJsonFormat loaderPlugin;
+    private static FileWriter configFileWriter;
     // Don't do this in your plugins!
     public static IRegistry<Command> commandRegistry = new CommandRegistry();
     private static JDA jda;
     private static PluginLoader loader = new PluginLoader();
 
-    public static void main(String[] args) throws LoginException, IOException, URISyntaxException, RegistryException {
-        System.setProperty("illegal-access", "permit");
+    public static void main(String[] args) throws LoginException, IOException, RegistryException {
+//        System.setProperty("illegal-access", "permit");
         if (!ConfigHelper.configFile.exists()) {
             LOGGER.error("Config file not found, creating template!");
             if (ConfigHelper.configFile.createNewFile()) {
-                GSON.toJson(new ConfigFile("BOT_TOKEN", false, templateList, "0"));
+                configFileWriter = new FileWriter(ConfigHelper.configFile);
+                String defaultSettings = GSON.toJson(new ConfigFile("BOT_TOKEN", false, templateList, "0"));
+                configFileWriter.write(defaultSettings);
+                configFileWriter.close();
                 LOGGER.info("Template configuration file created, please edit the values in the configuration file as per the documentation");
             }
         }
 
-        File loaderJsonFile = new File(Main.class.getResource("plugin.json").toURI());
         config = GSON.fromJson(new FileReader(ConfigHelper.configFile), ConfigFile.class);
         loaderPlugin = loader.getPlugin("loader");
 
@@ -81,7 +83,7 @@ public class Main extends ListenerAdapter implements ContextProvider {
             CommandCreateAction cmdToBeMade = jda.upsertCommand(cmdEntry.name(), cmdEntry.description()).setGuildOnly(cmdEntry.isGuildOnly());
 
             if (cmdEntry.permissions().length != 0) {
-                cmdToBeMade.setDefaultPermissions(DefaultMemberPermissions.enabledFor(cmdEntry.permissions()));
+                cmdToBeMade.setDefaultPermissions(DefaultMemberPermissions.enabledFor(cmdEntry.permissions())).queue();
             }
 
             if (cmdOptions.value().length != 0) {
@@ -97,25 +99,5 @@ public class Main extends ListenerAdapter implements ContextProvider {
     @Override
     public void onReady(@NotNull ReadyEvent event) {
         LOGGER.info("Bot started at {}", LocalDateTime.now().format(DateTimeFormatter.ofPattern("h:m:s a, d MMM uuuu")));
-    }
-
-    @Override
-    public JDA getJDA() {
-        return jda;
-    }
-
-    @Override
-    public PluginLoader getLoader() {
-        return this.loader;
-    }
-
-    @Override
-    public String getPlugin(String id) {
-        return "";
-    }
-
-    @Override
-    public List<String> getPlugins(String name) {
-        return Collections.EMPTY_LIST;
     }
 }

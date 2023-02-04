@@ -14,16 +14,19 @@ public class PluginTester {
         LOGGER.info("Running miscellaneous tests first!");
         LOGGER.debug("Event ID Testing: {}", generateEventId(generateRandomEventName()));
 
-        File f = new File("plugins");
+        File f = new File("plugins/BorealisBot-Plugin-Example-1.0-SNAPSHOT.jar");
         PluginLoader pl = new PluginLoader();
 
-        if (!f.exists() || !f.isDirectory()) {
-            LOGGER.warn("Creating plugins directory!");
-            f.mkdirs();
-        }
-
+//        if (!f.exists() || !f.isDirectory()) {
+//            LOGGER.warn("Creating plugins directory!");
+//            f.mkdirs();
+//        }
+        LOGGER.info("Loading plugin...");
+        pl.loadPlugin(f);
         LOGGER.info("Starting part 1 of plugin testing! Reading plugin.json!");
-        pl.loadPlugins(f);
+
+        LOGGER.info("Starting part 2 of plugin testing! Loading plugin!");
+        pl.plugin.onLoad();
     }
 
     private static String generateEventId(String dummyEventName) {

@@ -4,11 +4,8 @@ logs/*
 out/*
 .*
 
-# random files only i have
-a.txt
-
 # configuration files
-config.json
+settings.json
 
 # testing plugins
 ./plugins/*
