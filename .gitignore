@@ -8,4 +8,4 @@ out/*
 settings.json
 
 # testing plugins
-./plugins/*
+plugins/*
